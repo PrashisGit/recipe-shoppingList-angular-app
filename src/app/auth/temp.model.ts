@@ -1,3 +1,4 @@
 export class TempModel {
-  tempVar: string
+  tempVar: string;
+  //Prashis
 }
