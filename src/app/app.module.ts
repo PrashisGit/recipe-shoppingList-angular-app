@@ -5,10 +5,8 @@ import { HttpClientModule} from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
 import { AppRoutingModule } from './app-routing.module';
-import { ShoppinListmodule } from './shopping-list/shopping-List.module';
 import { SharedModule } from './shared/shared.module';
 import { CoreModule } from './core.module';
-import { Authmodule } from './auth/auth.module';
 
 @NgModule({
   declarations: [
@@ -20,10 +18,8 @@ import { Authmodule } from './auth/auth.module';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    ShoppinListmodule,
     SharedModule,
-    CoreModule,
-    Authmodule
+    CoreModule
   ],
 
   bootstrap: [AppComponent],
