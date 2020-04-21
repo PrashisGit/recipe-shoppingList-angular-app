@@ -3,7 +3,10 @@
     <!-- div class="alert alert-danger" *ngIf='error'>
       <p>{{ error }}</p>
     </div> -->
-    <app-alert [message]="error" *ngIf="error" (close)="onCloseAlertBox()"></app-alert>
+    <!--adding component using ngIf-->
+   <!-- <app-alert [message]="error" *ngIf="error" (close)="onCloseAlertBox()"></app-alert> -->
+   <!-- Adding component programtically-->
+   <ng-template appPlaceholder></ng-template>
     <div style="text-align: center;"  *ngIf="isLoading" >
       <app-loading-spinner></app-loading-spinner>
     </div>
