@@ -15,7 +15,7 @@ export class RecipeResolverService implements Resolve<Recipe[]> {
           import("rxjs").Observable<Recipe[]> |
           Promise<Recipe[]> {
             const recipes = this.recipeService.getRecipes();
-            if(recipes.length === 0){
+            if(recipes.length === 0) {
               return this.dataStorageService.fetchRecipes();
             }else{
               return recipes;
