@@ -10,12 +10,16 @@ const initalState = {
   ]
 };
 
-export function shoppingListReducer(state = initalState, action: ShoppingListActions.AddIngredient){
-  switch( action.type ){
+export function shoppingListReducer(
+  state = initalState,
+  action: ShoppingListActions.AddIngredient
+  ) {
+
+  switch ( action.type ) {
     case ShoppingListActions.ADD_INGREDIENT :
       return {
         ...state, // coppying old objects
-        Ingredient: [...state.ingredients, action.payload] // overwritng the ingridents: first copy old date and dn adding new ingrident
+        ingredients: [...state.ingredients, action.payload] // overwritng the ingridents: first copy old date and dn adding new ingrident
       };
     default:
       return state;

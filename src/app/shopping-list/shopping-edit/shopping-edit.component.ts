@@ -1,21 +1,27 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { Ingredient } from 'src/app/shared/ingredient.model';
-import { ShoppingListService } from '../shopping-list.service';
 import { NgForm } from '@angular/forms';
 import { Subscription } from 'rxjs';
+import { Store } from '@ngrx/store';
+
+import * as ShoppingListActions from '../store/shopping-list.actions';
+import { Ingredient } from 'src/app/shared/ingredient.model';
+import { ShoppingListService } from '../shopping-list.service';
 
 @Component({
   selector: 'app-shopping-edit',
   templateUrl: './shopping-edit.component.html',
   styleUrls: ['./shopping-edit.component.css']
 })
-export class ShoppingEditComponent implements OnInit,OnDestroy {
-  @ViewChild('f', {static:false}) slForm: NgForm;
+export class ShoppingEditComponent implements OnInit, OnDestroy {
+  @ViewChild('f', {static: false}) slForm: NgForm;
   subscription: Subscription;
   editMode = false;
   editedItemIndex: number;
-  editedItem:Ingredient;
-  constructor(private shoppingListService: ShoppingListService) { }
+  editedItem: Ingredient;
+  constructor(
+      private shoppingListService: ShoppingListService,
+      private store: Store<{shoppingList: {ingredients: Ingredient[]}}>
+    ) { }
 
   ngOnInit() {
     this.subscription = this.shoppingListService.startedEdting.subscribe(
@@ -32,13 +38,16 @@ export class ShoppingEditComponent implements OnInit,OnDestroy {
   }
 
   onSubmit(form: NgForm){
-    console.log(form);
     const value = form.value;
     const newInggredient = new Ingredient(value.name, value.amount);
     if(this.editMode){
       this.shoppingListService.updateIngrident(this.editedItemIndex,newInggredient);
     }else{
-      this.shoppingListService.addIngridents(newInggredient);
+     // this.shoppingListService.addIngridents(newInggredient);
+     // ingridient will add/dispatch using store ngrx
+
+     this.store.dispatch(new ShoppingListActions.AddIngredient(newInggredient));
+
     }
     this.editMode = false;
     form.reset();
