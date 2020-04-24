@@ -1,6 +1,7 @@
 import { Action } from '@ngrx/store';
 
 import { Ingredient } from '../../shared/ingredient.model';
+import { ADD_INGREDIENT} from './shopping-list.actions';
 
 const initalState = {
   ingredients: [
@@ -11,7 +12,7 @@ const initalState = {
 
 export function shoppingListReducer(state = initalState, action: Action){
   switch( action.type ){
-    case 'ADD_INGREDIENT' :
+    case ADD_INGREDIENT :
       return {
         ...state, // coppying old objects
         Ingredient: [...state.ingredients, action] // overwritng the ingridents: first copy old date and dn adding new ingrident
