@@ -17,5 +17,7 @@ export function shoppingListReducer(state = initalState, action: ShoppingListAct
         ...state, // coppying old objects
         Ingredient: [...state.ingredients, action.payload] // overwritng the ingridents: first copy old date and dn adding new ingrident
       };
+    default:
+      return state;
   }
 }
