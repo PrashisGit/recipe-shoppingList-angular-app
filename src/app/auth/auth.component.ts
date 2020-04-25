@@ -3,9 +3,12 @@ import { NgForm, Form } from '@angular/forms';
 import { AuthService, AuthResponseData } from './auth.service';
 import { Observable, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
 
 import { AlertComponent } from '../shared/alert/alert.component';
 import { PlaceholderDirective } from '../shared/paceholder/placeholder.directive';
+import * as fromApp from '../store/app.reducer';
+import * as AuthActions from './store/auth.actions';
 
 @Component({
   selector: 'app-auth',
@@ -22,7 +25,8 @@ export class AuthComponent implements OnDestroy {
 
   constructor(private authService: AuthService,
               private router: Router,
-              private componentFactoryResolver: ComponentFactoryResolver) {}
+              private componentFactoryResolver: ComponentFactoryResolver,
+              private store: Store<fromApp.AppState>) {}
 
 
   onSwitchMode() {
@@ -41,7 +45,11 @@ export class AuthComponent implements OnDestroy {
 
     let authObser: Observable<AuthResponseData>;
     if (this.isLoginMode) {
-      authObser =  this.authService.login(email, password);
+      //authObser =  this.authService.login(email, password);
+      this.store.dispatch(new AuthActions.LoginStart({
+        email: email,
+        password: password
+      }));
     } else {
       authObser =  this.authService.signUp(email, password);
     }
