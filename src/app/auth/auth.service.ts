@@ -31,7 +31,9 @@ export class AuthService {
     return this.http.post<AuthResponseData>(
       'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=' + environment.firebaseAPIKey,
       {
+        // tslint:disable-next-line: object-literal-shorthand
         email: email,
+        // tslint:disable-next-line: object-literal-shorthand
         password: password,
         returnSecureToken: true
       }
@@ -48,7 +50,9 @@ export class AuthService {
     return this.http.post<AuthResponseData>(
       'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=' + environment.firebaseAPIKey,
       {
+        // tslint:disable-next-line: object-literal-shorthand
         email: email,
+        // tslint:disable-next-line: object-literal-shorthand
         password: password,
         returnSecureToken: true
       }
@@ -61,7 +65,7 @@ export class AuthService {
     );
   }
 
-  autoLogin(){
+  autoLogin() {
     console.log('auto login called');
     const userData: {
       email: string,
@@ -70,7 +74,7 @@ export class AuthService {
       _tokenExpirationDate: string;
     } = JSON.parse(localStorage.getItem('userData'));
 
-    if(!userData) {
+    if (!userData) {
       return;
     }
 
@@ -81,7 +85,7 @@ export class AuthService {
                               );
 
 
-    if(loadedUser.token){
+    if (loadedUser.token) {
       this.user.next(loadedUser);
       const expirationDuration = new Date(userData._tokenExpirationDate).getTime() - new Date().getTime();
       this.autoLogout(expirationDuration);
@@ -95,14 +99,13 @@ export class AuthService {
     this.user.next(null);
     this.router.navigate(['/auth']);
     localStorage.removeItem('userData');
-    if(this.tokenExpirationTimer) {
+    if (this.tokenExpirationTimer) {
       clearTimeout(this.tokenExpirationTimer);
     }
     this.tokenExpirationTimer = null;
   }
 
   autoLogout(expirationDuration: number) {
-    console.log("expirationDuration "+expirationDuration);
     this.tokenExpirationTimer =  setTimeout(() => {
       this.logout();
     }, expirationDuration);
