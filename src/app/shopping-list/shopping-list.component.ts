@@ -11,38 +11,18 @@ import * as ShoppingListActions from './store/shopping-list.actions';
   templateUrl: './shopping-list.component.html',
   styleUrls: ['./shopping-list.component.css']
 })
-export class ShoppingListComponent implements OnInit, OnDestroy {
-
-  // ingredients: Ingredient[];
-  // above code comment for changes of using store
+export class ShoppingListComponent implements OnInit {
   ingredients: Observable<{ingredients: Ingredient[]}>;
-  // subscription: Subscription;
   constructor(
       private store: Store<fromApp.AppState>
     ) { }
 
 
   ngOnInit() {
-
-    /*this.ingredients = this.shoppingListService.getIngridients();
-    this.subscription =  this.shoppingListService.ingridentsChanged.subscribe(
-      (inggriedents: Ingredient[]) => {
-        this.ingredients = inggriedents;
-      }
-    );*/
-    // above code changes to store
     this.ingredients = this.store.select('shoppingList');
   }
 
   onEditItem(index: number) {
     this.store.dispatch(new ShoppingListActions.StartEditItem(index));
   }
-
-  ngOnDestroy(): void {
-   // this.subscription.unsubscribe();
-   // no need for unsubscribe as we change code from subject to Store
-
-  }
-
-
 }

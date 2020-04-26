@@ -1,8 +1,6 @@
 import { Component, ComponentFactoryResolver, ViewChild, OnDestroy, OnInit } from '@angular/core';
-import { NgForm, Form } from '@angular/forms';
-import { AuthService, AuthResponseData } from './auth.service';
-import { Observable, Subscription } from 'rxjs';
-import { Router } from '@angular/router';
+import { NgForm } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
 
 import { AlertComponent } from '../shared/alert/alert.component';
@@ -24,8 +22,7 @@ export class AuthComponent implements OnInit, OnDestroy {
   private closeSub: Subscription;
   private storeSub: Subscription;
 
-  constructor(private authService: AuthService,
-              private router: Router,
+  constructor(
               private componentFactoryResolver: ComponentFactoryResolver,
               private store: Store<fromApp.AppState>) {}
 
@@ -71,22 +68,6 @@ export class AuthComponent implements OnInit, OnDestroy {
         password: password
       }));
     }
-
-
-   /* authObser.subscribe(
-      reponse => {
-        console.log(reponse);
-        this.isLoading = false;
-        this.router.navigate(['/recipes']);
-      },
-      errorMessage => {
-        console.log(errorMessage);
-        this.error = errorMessage;
-        this.showErrorAlert(errorMessage);
-        this.isLoading = false;
-      }
-    ); */
-
     form.reset();
   }
 
@@ -115,8 +96,6 @@ export class AuthComponent implements OnInit, OnDestroy {
       this.closeSub.unsubscribe();
       hostViewContainer.clear();
     });
-
-
   }
 
 }

@@ -3,8 +3,9 @@ import { NgForm } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
 
-import * as ShoppingListActions from '../store/shopping-list.actions';
+
 import { Ingredient } from '../../shared/ingredient.model';
+import * as ShoppingListActions from '../store/shopping-list.actions';
 import * as fromApp from '../../store/app.reducer';
 
 @Component({
@@ -16,7 +17,6 @@ export class ShoppingEditComponent implements OnInit, OnDestroy {
   @ViewChild('f', {static: false}) slForm: NgForm;
   subscription: Subscription;
   editMode = false;
- // editedItemIndex: number;
   editedItem: Ingredient;
   constructor(
       private store: Store<fromApp.AppState>
@@ -27,9 +27,7 @@ export class ShoppingEditComponent implements OnInit, OnDestroy {
     .select('shoppingList')
     .subscribe( stateData => {
       if ( stateData.editedIngredientIndex > -1) {
-
         this.editMode = true;
-       // this.editedItemIndex = stateData.editedIngredientIndex;
         this.editedItem = stateData.editedIngredient;
         this.slForm.setValue({
           name: this.editedItem.name,
@@ -40,17 +38,6 @@ export class ShoppingEditComponent implements OnInit, OnDestroy {
         this.editMode = false;
       }
     });
-    /*this.subscription = this.shoppingListService.startedEdting.subscribe(
-      (index: number) => {
-        this.editMode = true;
-        this.editedItemIndex = index;
-        this.editedItem = this.shoppingListService.getIngrident(index);
-        this.slForm.setValue({
-          name: this.editedItem.name,
-          amount: this.editedItem.amount
-        });
-      }
-    );*/
   }
 
   onSubmit(form: NgForm) {

@@ -13,7 +13,7 @@ import { Subscription } from 'rxjs';
 })
 export class RecipeListComponent implements OnInit, OnDestroy {
   recipes: Recipe[];
-  recipeChangeSub : Subscription;
+  recipeChangeSub: Subscription;
   constructor(private recipeService: RecipeService,
               private router: Router,
               private route: ActivatedRoute) { }
@@ -22,14 +22,14 @@ export class RecipeListComponent implements OnInit, OnDestroy {
    this.recipeChangeSub =  this.recipeService.recipeChanged.subscribe((recipes: Recipe[]) => {
       this.recipes = recipes;
     });
-    this.recipes = this.recipeService.getRecipes();
+   this.recipes = this.recipeService.getRecipes();
   }
 
-  onNewRecipe(){
+  onNewRecipe() {
     this.router.navigate(['new'], {relativeTo: this.route});
   }
 
-  ngOnDestroy(){
+  ngOnDestroy() {
     this.recipeChangeSub.unsubscribe();
   }
 }
