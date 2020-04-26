@@ -32,7 +32,7 @@ export class AuthService {
               private router: Router,
               private store: Store<fromApp.AppState>) {}
 
-  signUp(email: string, password: string) {
+  /*signUp(email: string, password: string) {
     return this.http.post<AuthResponseData>(
       'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=' + environment.firebaseAPIKey,
       {
@@ -49,9 +49,9 @@ export class AuthService {
         this.handleAuthentication(resData.email, resData.localId, resData.idToken, +resData.expiresIn);
       })
     );
-  }
+  }*/
 
-  login(email: string, password: string) {
+  /*login(email: string, password: string) {
     return this.http.post<AuthResponseData>(
       'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=' + environment.firebaseAPIKey,
       {
@@ -68,7 +68,7 @@ export class AuthService {
         this.handleAuthentication(resData.email, resData.localId, resData.idToken, +resData.expiresIn);
       })
     );
-  }
+  }*/
 
   autoLogin() {
     console.log('auto login called');
@@ -109,8 +109,8 @@ export class AuthService {
 
   logout() {
     // this.user.next(null);
-    this.store.dispatch(new authActions.Logout());
-    this.router.navigate(['/auth']);
+
+    // this.router.navigate(['/auth']);
     localStorage.removeItem('userData');
     if (this.tokenExpirationTimer) {
       clearTimeout(this.tokenExpirationTimer);
@@ -124,7 +124,7 @@ export class AuthService {
     }, expirationDuration);
   }
 
-  private handleAuthentication(email: string, userId: string, token: string, expiresIn: number) {
+  /*private handleAuthentication(email: string, userId: string, token: string, expiresIn: number) {
     const expirationDate = new Date(new Date().getTime() + (expiresIn * 1000));
     const user = new User(
           email,
@@ -145,9 +145,9 @@ export class AuthService {
    }));
     this.autoLogout(expiresIn * 1000);
     localStorage.setItem('userData', JSON.stringify(user));
-  }
+  }*/
 
-  private errorHandler(errorResp: HttpErrorResponse) {
+  /*private errorHandler(errorResp: HttpErrorResponse) {
     let errorMessage = null;
     if (!errorResp.error || !errorResp.error.error) {
           return throwError(errorMessage);
@@ -176,5 +176,5 @@ export class AuthService {
             break;
         }
     return throwError(errorMessage);
-  }
+  }*/
 }
