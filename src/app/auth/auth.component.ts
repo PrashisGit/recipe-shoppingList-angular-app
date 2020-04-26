@@ -1,4 +1,4 @@
-import { Component, ComponentFactoryResolver, ViewChild, OnDestroy } from '@angular/core';
+import { Component, ComponentFactoryResolver, ViewChild, OnDestroy, OnInit } from '@angular/core';
 import { NgForm, Form } from '@angular/forms';
 import { AuthService, AuthResponseData } from './auth.service';
 import { Observable, Subscription } from 'rxjs';
@@ -14,7 +14,7 @@ import * as AuthActions from './store/auth.actions';
   selector: 'app-auth',
   templateUrl: './auth.component.html'
 })
-export class AuthComponent implements OnDestroy {
+export class AuthComponent implements OnInit, OnDestroy {
 
   isLoginMode = true;
   isLoading = false;
@@ -29,6 +29,15 @@ export class AuthComponent implements OnDestroy {
               private store: Store<fromApp.AppState>) {}
 
 
+  ngOnInit() {
+    this.store.select('auth').subscribe(authState => {
+      this.isLoading = authState.loading;
+      this.error = authState.authError;
+      if (this.error) {
+        this.showErrorAlert(this.error);
+      }
+    });
+  }
   onSwitchMode() {
     this.isLoginMode = !this.isLoginMode;
 
@@ -45,16 +54,19 @@ export class AuthComponent implements OnDestroy {
 
     let authObser: Observable<AuthResponseData>;
     if (this.isLoginMode) {
-      //authObser =  this.authService.login(email, password);
+      // authObser =  this.authService.login(email, password);
       this.store.dispatch(new AuthActions.LoginStart({
+        // tslint:disable-next-line: object-literal-shorthand
         email: email,
+        // tslint:disable-next-line: object-literal-shorthand
         password: password
       }));
     } else {
       authObser =  this.authService.signUp(email, password);
     }
 
-    authObser.subscribe(
+
+   /* authObser.subscribe(
       reponse => {
         console.log(reponse);
         this.isLoading = false;
@@ -66,7 +78,7 @@ export class AuthComponent implements OnDestroy {
         this.showErrorAlert(errorMessage);
         this.isLoading = false;
       }
-    );
+    ); */
 
     form.reset();
   }
@@ -77,7 +89,7 @@ export class AuthComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.closeSub){
+    if (this.closeSub) {
       this.closeSub.unsubscribe();
     }
   }
