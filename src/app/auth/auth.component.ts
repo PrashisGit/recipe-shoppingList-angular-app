@@ -52,7 +52,7 @@ export class AuthComponent implements OnInit, OnDestroy {
     const password = form.value.password;
     this.isLoading = true;
 
-    let authObser: Observable<AuthResponseData>;
+    // let authObser: Observable<AuthResponseData>;
     if (this.isLoginMode) {
       // authObser =  this.authService.login(email, password);
       this.store.dispatch(new AuthActions.LoginStart({
@@ -62,7 +62,13 @@ export class AuthComponent implements OnInit, OnDestroy {
         password: password
       }));
     } else {
-      authObser =  this.authService.signUp(email, password);
+      // authObser =  this.authService.signUp(email, password);
+      this.store.dispatch(new AuthActions.SignupStart({
+        // tslint:disable-next-line: object-literal-shorthand
+        email: email,
+         // tslint:disable-next-line: object-literal-shorthand
+        password: password
+      }));
     }
 
 

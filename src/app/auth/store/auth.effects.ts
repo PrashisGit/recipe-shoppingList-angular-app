@@ -17,45 +17,26 @@ export interface AuthResponseData {
   registered?: boolean;
 }
 
-@Injectable()
-export class AuthEffects {
-  @Effect()
-  authSignup = this.actions$.pipe(
-    ofType(AuthActions.SIGNUP_START)
-  );
+const handleAuthentication = (expiresIn: number, email: string, userId: string, token: string) => {
+  const expirationDate = new Date(new Date().getTime() + (expiresIn * 1000));
+  return new AuthActions.AuthenticateSuccess({
+    // tslint:disable-next-line: object-literal-shorthand
+    email: email,
+    // tslint:disable-next-line: object-literal-shorthand
+    userId: userId,
+    // tslint:disable-next-line: object-literal-shorthand
+    token: token,
+    // tslint:disable-next-line: object-literal-shorthand
+    expirationDate: expirationDate
+  });
+};
 
-  @Effect() // effects will yield observable
-  authLogin = this.actions$.pipe(
-    ofType(AuthActions.LOGIN_START),
-    switchMap((authData: AuthActions.LoginStart) => { // switchmap use to yield new observable
-      return this.http.post<AuthResponseData>(
-        'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key='
-        + environment.firebaseAPIKey,
-        {
-          // tslint:disable-next-line: object-literal-shorthand
-          email: authData.payload.email,
-          // tslint:disable-next-line: object-literal-shorthand
-          password: authData.payload.password,
-          returnSecureToken: true
-        }
-      ).pipe(
-        // observable die in error block, usw (Of) to yeild new observable
-        map(resData => {
-          const expirationDate = new Date(new Date().getTime() + (+resData.expiresIn * 1000));
-          return new AuthActions.AuthenticateSuccess({
-            email: resData.email,
-            userId: resData.localId,
-            token: resData.idToken,
-            // tslint:disable-next-line: object-literal-shorthand
-            expirationDate: expirationDate
-          });
-        }),
-        catchError(errorResp => {
-          let errorMessage = 'An unnown error occurred!';
-          if (!errorResp.error || !errorResp.error.error) {
+const handleError = (errorResp) => {
+  let errorMessage = 'An unnown error occurred!';
+  if (!errorResp.error || !errorResp.error.error) {
             return of(new AuthActions.AuthenticateFail(errorMessage));
           }
-          switch (errorResp.error.error.message) {
+  switch (errorResp.error.error.message) {
             case 'EMAIL_NOT_FOUND':
             errorMessage = 'There is no user record corresponding to this identifier. The user may have been deleted.';
             break;
@@ -75,7 +56,66 @@ export class AuthEffects {
             errorMessage = 'We have blocked all requests from this device due to unusual activity. Try again later.';
             break;
           }
-          return of(new AuthActions.AuthenticateFail(errorMessage));
+  return of(new AuthActions.AuthenticateFail(errorMessage));
+};
+
+@Injectable()
+export class AuthEffects {
+  @Effect()
+  authSignup = this.actions$.pipe(
+    ofType(AuthActions.SIGNUP_START),
+    switchMap((signupActions: AuthActions.SignupStart) => {
+      return this.http.post<AuthResponseData>(
+        'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=' + environment.firebaseAPIKey,
+        {
+          // tslint:disable-next-line: object-literal-shorthand
+          email: signupActions.payload.email,
+          // tslint:disable-next-line: object-literal-shorthand
+          password: signupActions.payload.password,
+          returnSecureToken: true
+        }
+      ).pipe(
+        map(resData => {
+          return handleAuthentication(
+              +resData.expiresIn,
+              resData.email,
+              resData.localId,
+              resData.idToken
+            );
+        }),
+        catchError(errorResp => {
+          return handleError(errorResp);
+        })
+      );
+    })// switch map block
+  );
+
+  @Effect() // effects will yield observable
+  authLogin = this.actions$.pipe(
+    ofType(AuthActions.LOGIN_START),
+    switchMap((authData: AuthActions.LoginStart) => { // switchmap use to yield new observable
+      return this.http.post<AuthResponseData>(
+        'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key='
+        + environment.firebaseAPIKey,
+        {
+          // tslint:disable-next-line: object-literal-shorthand
+          email: authData.payload.email,
+          // tslint:disable-next-line: object-literal-shorthand
+          password: authData.payload.password,
+          returnSecureToken: true
+        }
+      ).pipe(
+        // observable die in error block, usw (Of) to yeild new observable
+        map(resData => {
+          return handleAuthentication(
+            +resData.expiresIn,
+            resData.email,
+            resData.localId,
+            resData.idToken
+          );
+        }),
+        catchError(errorResp => {
+          return handleError(errorResp);
         })// catchError block
       );
     })
