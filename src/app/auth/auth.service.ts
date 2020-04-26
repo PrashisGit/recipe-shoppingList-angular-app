@@ -93,7 +93,7 @@ export class AuthService {
     if (loadedUser.token) {
     // this.user.next(loadedUser);
       this.store.dispatch(
-        new authActions.Login({
+        new authActions.AuthenticateSuccess({
           email: loadedUser.email,
           userId: loadedUser.userId,
           token: loadedUser.token,
@@ -133,10 +133,14 @@ export class AuthService {
           expirationDate
         );
    // this.user.next(user);
-    this.store.dispatch(new authActions.Login({
+    this.store.dispatch(new authActions.AuthenticateSuccess({
+     // tslint:disable-next-line: object-literal-shorthand
      email: email,
+     // tslint:disable-next-line: object-literal-shorthand
      userId: userId,
+     // tslint:disable-next-line: object-literal-shorthand
      token: token,
+     // tslint:disable-next-line: object-literal-shorthand
      expirationDate: expirationDate
    }));
     this.autoLogout(expiresIn * 1000);

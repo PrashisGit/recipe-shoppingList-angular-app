@@ -19,6 +19,11 @@ export interface AuthResponseData {
 
 @Injectable()
 export class AuthEffects {
+  @Effect()
+  authSignup = this.actions$.pipe(
+    ofType(AuthActions.SIGNUP_START)
+  );
+
   @Effect() // effects will yield observable
   authLogin = this.actions$.pipe(
     ofType(AuthActions.LOGIN_START),
@@ -37,7 +42,7 @@ export class AuthEffects {
         // observable die in error block, usw (Of) to yeild new observable
         map(resData => {
           const expirationDate = new Date(new Date().getTime() + (+resData.expiresIn * 1000));
-          return new AuthActions.Login({
+          return new AuthActions.AuthenticateSuccess({
             email: resData.email,
             userId: resData.localId,
             token: resData.idToken,
@@ -48,7 +53,7 @@ export class AuthEffects {
         catchError(errorResp => {
           let errorMessage = 'An unnown error occurred!';
           if (!errorResp.error || !errorResp.error.error) {
-            return of(new AuthActions.LoginFail(errorMessage));
+            return of(new AuthActions.AuthenticateFail(errorMessage));
           }
           switch (errorResp.error.error.message) {
             case 'EMAIL_NOT_FOUND':
@@ -70,7 +75,7 @@ export class AuthEffects {
             errorMessage = 'We have blocked all requests from this device due to unusual activity. Try again later.';
             break;
           }
-          return of(new AuthActions.LoginFail(errorMessage));
+          return of(new AuthActions.AuthenticateFail(errorMessage));
         })// catchError block
       );
     })
@@ -79,7 +84,7 @@ export class AuthEffects {
   // to stop effect from returning obervable user dispatch false
 @Effect({dispatch: false})
 authSuccess = this.actions$.pipe(
-    ofType(AuthActions.LOGIN),
+    ofType(AuthActions.AUTHENTICATE_SUCCESS),
     tap(() => {
       this.router.navigate(['/']);
     })
