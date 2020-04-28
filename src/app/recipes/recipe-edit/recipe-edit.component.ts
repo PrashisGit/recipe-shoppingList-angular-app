@@ -1,7 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
+import { Store } from '@ngrx/store';
+
 import { RecipeService } from '../recipe.service';
+import * as fromApp from '../../store/app.reducer';
+import * as RecipeActions from '../store/recipe.actions';
+import { map } from 'rxjs/operators';
+
 
 @Component({
   selector: 'app-recipe-edit',
@@ -15,7 +21,8 @@ export class RecipeEditComponent implements OnInit {
   recipeForm: FormGroup;
   constructor(private route: ActivatedRoute,
               private router: Router,
-              private recipeService: RecipeService) { }
+              private recipeService: RecipeService,
+              private store: Store<fromApp.AppState>) { }
 
   ngOnInit() {
     this.route.params.subscribe(
@@ -64,26 +71,36 @@ export class RecipeEditComponent implements OnInit {
     const recipeIngridentsFArray = new FormArray([]);
 
     if (this.editMode) {
-      const recipe = this.recipeService.getRecipe(this.id);
-      recipeName = recipe.name;
-      recipeImagePath = recipe.imagePath;
-      recipeDescription = recipe.description;
-      // tslint:disable-next-line: no-string-literal
-      if (recipe['ingridents']) {
-        for (let ingrident of recipe.ingridents) {
-          recipeIngridentsFArray.push(
-            new FormGroup({
-              // tslint:disable-next-line: object-literal-key-quotes
-              'name': new FormControl(ingrident.name, Validators.required),
-              // tslint:disable-next-line: object-literal-key-quotes
-              'amount': new FormControl(ingrident.amount, [
-                Validators.required,
-                Validators.pattern(/^[1-9]+[0-9]*$/)]
-                )
-            })
-          );
+      //const recipe = this.recipeService.getRecipe(this.id);
+
+      this.store.select('recipes').pipe(
+        map(recipeState => {
+          return recipeState.recipes.find((recipe, index) => {
+            return index === this.id;
+          });
+        })
+      ).subscribe(recipe => {
+        recipeName = recipe.name;
+        recipeImagePath = recipe.imagePath;
+        recipeDescription = recipe.description;
+        // tslint:disable-next-line: no-string-literal
+        if (recipe['ingridents']) {
+          for (let ingrident of recipe.ingridents) {
+            recipeIngridentsFArray.push(
+              new FormGroup({
+                // tslint:disable-next-line: object-literal-key-quotes
+                'name': new FormControl(ingrident.name, Validators.required),
+                // tslint:disable-next-line: object-literal-key-quotes
+                'amount': new FormControl(ingrident.amount, [
+                  Validators.required,
+                  Validators.pattern(/^[1-9]+[0-9]*$/)]
+                  )
+              })
+            );
+          }
         }
-      }
+      });
+
     }
     this.recipeForm = new FormGroup({
       // tslint:disable-next-line: object-literal-key-quotes
