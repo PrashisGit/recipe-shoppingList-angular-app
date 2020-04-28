@@ -35,7 +35,7 @@ const handleAuthentication = (expiresIn: number, email: string, userId: string, 
   });
 };
 
-const handleError = (errorResp) => {
+const handleError = (errorResp: any) => {
   let errorMessage = 'An unnown error occurred!';
   if (!errorResp.error || !errorResp.error.error) {
             return of(new AuthActions.AuthenticateFail(errorMessage));
@@ -133,7 +133,7 @@ export class AuthEffects {
   // to stop effect from returning obervable user dispatch false
 @Effect({dispatch: false})
 authRedirect = this.actions$.pipe(
-    ofType(AuthActions.AUTHENTICATE_SUCCESS, AuthActions.LOGOUT),
+    ofType(AuthActions.AUTHENTICATE_SUCCESS),
     tap(() => {
       this.router.navigate(['/']);
     })
@@ -172,6 +172,7 @@ authRedirect = this.actions$.pipe(
         });
 
     }
+      return { type: 'DUMMY' };
     })
   );
 
@@ -179,9 +180,10 @@ authRedirect = this.actions$.pipe(
   authLogout = this.actions$.pipe(
     ofType(AuthActions.LOGOUT),
     tap(() => {
-      this.router.navigate(['/auth']);
-      localStorage.removeItem('userData');
       this.authService.clearLogoutTimer();
+      localStorage.removeItem('userData');
+
+       this.router.navigate(['/auth']);
     })
   );
 
