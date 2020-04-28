@@ -13,7 +13,6 @@ export class SetRecipes implements Action {
 
 export class FetchRecipes implements Action {
   readonly type = FETCH_RECIPES;
-
 }
 
 export type RecipesActions =
