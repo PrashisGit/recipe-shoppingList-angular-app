@@ -1,0 +1,37 @@
+{
+  "recipes" : [ {
+    "description" : "Super Tasty, Indian Burger",
+    "imagePath" : "https://upload.wikimedia.org/wikipedia/commons/4/4e/Vada_Pav-Indian_street_food.JPG",
+    "ingridents" : [ {
+      "amount" : 2,
+      "name" : "Chili Paper"
+    }, {
+      "amount" : 3,
+      "name" : "Garlic"
+    }, {
+      "amount" : 1,
+      "name" : "Deep fried mashed potato patties"
+    }, {
+      "amount" : 1,
+      "name" : "Ginger"
+    }, {
+      "amount" : 2,
+      "name" : "Bun"
+    } ],
+    "name" : "Vada Pav"
+  }, {
+    "description" : "Test Description 2",
+    "imagePath" : "https://cdn.pixabay.com/photo/2016/06/15/19/09/food-1459693_960_720.jpg",
+    "ingridents" : [ {
+      "amount" : 2,
+      "name" : "onion "
+    }, {
+      "amount" : 1,
+      "name" : "Bun"
+    }, {
+      "amount" : 2,
+      "name" : "Tomatoes"
+    } ],
+    "name" : "Test Name 2"
+  } ]
+}

@@ -18,7 +18,7 @@ export class DataStorageService {
 
   storeRecipes() {
     const recipes = this.recipeService.getRecipes();
-    this.http.put('https://shopping-recipe-api.firebaseio.com/recipes.json',
+    this.http.put('https://shoppig-recipe-app.firebaseio.com/recipes.json',
     recipes)
     .subscribe(response =>{
       console.log(response);
@@ -26,7 +26,7 @@ export class DataStorageService {
   }
 
   fetchRecipes() {
-    return this.http.get<Recipe[]>('https://shopping-recipe-api.firebaseio.com/recipes.json',
+    return this.http.get<Recipe[]>('https://shoppig-recipe-app.firebaseio.com/recipes.json',
       )
       .pipe(
       map(recipes =>{
