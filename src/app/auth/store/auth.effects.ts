@@ -136,7 +136,7 @@ export class AuthEffects {
 authRedirect = this.actions$.pipe(
     ofType(AuthActions.AUTHENTICATE_SUCCESS),
     tap((authSuccessAction: AuthActions.AuthenticateSuccess) => {
-      if(authSuccessAction.payload.redirect){
+      if (authSuccessAction.payload.redirect) {
         this.router.navigate(['/']);
       }
     })
@@ -186,8 +186,7 @@ authRedirect = this.actions$.pipe(
     tap(() => {
       this.authService.clearLogoutTimer();
       localStorage.removeItem('userData');
-
-       this.router.navigate(['/auth']);
+      this.router.navigate(['/auth']);
     })
   );
 
