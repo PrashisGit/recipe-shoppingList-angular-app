@@ -15,7 +15,7 @@ export class RecipeEffects {
   fetchRecipes = this.actions$.pipe(
     ofType(RecipesActions.FETCH_RECIPES),
     switchMap(() => {
-      return this.http.get<Recipe[]>('https://shopping-recipe-ngrx.firebaseio.com/recipes.json',
+      return this.http.get<Recipe[]>('https://shopping-recipe-univarsal.firebaseio.com/recipes.json',
       );
     }),
     map(recipes => {
@@ -33,7 +33,7 @@ export class RecipeEffects {
     ofType(RecipesActions.STORE_RECIPES),
     withLatestFrom(this.store.select('recipes')),
     switchMap(([actionData, recipeState]) => {
-      return this.http.put('https://shopping-recipe-ngrx.firebaseio.com/recipes.json',
+      return this.http.put('https://shopping-recipe-univarsal.firebaseio.com/recipes.json',
       recipeState.recipes);
     })
   );
