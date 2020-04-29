@@ -3,7 +3,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 
-import { RecipeService } from '../recipe.service';
+
 import * as fromApp from '../../store/app.reducer';
 import * as RecipeActions from '../store/recipe.actions';
 import { map } from 'rxjs/operators';
@@ -23,7 +23,6 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
   private storeSub: Subscription;
   constructor(private route: ActivatedRoute,
               private router: Router,
-              private recipeService: RecipeService,
               private store: Store<fromApp.AppState>) { }
 
 
